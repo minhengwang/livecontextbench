@@ -50,8 +50,9 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 4
   border:1px dashed #ccc9bf;transition:all .55s cubic-bezier(.3,.7,.3,1)}
 .blk.cut .fl{height:0;opacity:0;margin:0;border-width:0}
 .win-meter{margin-top:11px}
-.wm-track{height:8px;background:var(--tag);border:1px solid var(--line)}
-.wm-fill{height:100%;background:var(--accent);width:8%;transition:width .55s cubic-bezier(.3,.7,.3,1)}
+.wm-track{height:9px;background:var(--tag);border:1px solid var(--line);position:relative}
+.wm-ghost{position:absolute;inset:0;width:3%;background:repeating-linear-gradient(135deg,#dcd8cd 0 4px,#eceae3 4px 8px);transition:width .55s cubic-bezier(.3,.7,.3,1)}
+.wm-fill{position:absolute;inset:0;background:var(--accent);width:3%;transition:width .55s cubic-bezier(.3,.7,.3,1)}
 .wm-lab{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--gray2);margin-top:6px}
 .wm-lab b{color:var(--ink)}
 .win-note{font:italic 12.5px var(--serif);color:var(--gray2);text-align:center;margin-top:10px}
@@ -278,10 +279,10 @@ footer{border-top:1px solid var(--line);margin-top:20px}
     <div class="win-cap"><span>agent's context</span><b id="a-turn">turn 0</b></div>
     <div class="win" id="a-win"></div>
     <div class="win-meter">
-      <div class="wm-track"><div class="wm-fill" id="a-fill"></div></div>
+      <div class="wm-track"><div class="wm-ghost" id="a-ghost"></div><div class="wm-fill" id="a-fill"></div></div>
       <div class="wm-lab"><span><b id="a-tok">1.9k</b> tokens</span><span>budget 64k</span></div>
     </div>
-    <div class="win-note">violet = lines worth keeping · striped = junk being deleted</div>
+    <div class="win-note">violet bar = actual context (to scale) · striped bar = where hoarding everything would be</div>
   </div>
 </div>
 
@@ -360,16 +361,19 @@ document.addEventListener('click',e=>{const dd=document.getElementById('vizdd');
 (function(){
   const win=document.getElementById('a-win'), fill=document.getElementById('a-fill'),
         tok=document.getElementById('a-tok'), turn=document.getElementById('a-turn');
-  let t=0, base=1.9;
-  function upd(k){ tok.textContent=k.toFixed(1)+'k'; fill.style.width=Math.min(100,k/64*100*5.5)+'%'; }
-  function reset(){ win.innerHTML=''; t=0; base=1.9; upd(base); turn.textContent='turn 0'; }
+  const ghost=document.getElementById('a-ghost');
+  let t=0, base=1.9, hoard=1.9;
+  function upd(k){ tok.textContent=k.toFixed(1)+'k';
+    fill.style.width=Math.max(1.5,k/64*100)+'%';
+    ghost.style.width=Math.max(1.5,hoard/64*100)+'%'; }
+  function reset(){ win.innerHTML=''; t=0; base=1.9; hoard=1.9; upd(base); turn.textContent='turn 0'; }
   function cycle(){
     t++;
     if(t>4){ setTimeout(reset,2400); setTimeout(cycle,3600); return; }
     const b=document.createElement('div'); b.className='blk';
     b.innerHTML='<div class="nl"></div><div class="nl"></div><div class="fl"></div>';
     win.appendChild(b);
-    base+=6.4; upd(base); turn.textContent='turn '+(t*2-1);
+    base+=6.4; hoard+=6.4; upd(base); turn.textContent='turn '+(t*2-1);
     setTimeout(()=>{ b.classList.add('cut'); base-=5.9; upd(base); turn.textContent='turn '+(t*2); },1350);
     setTimeout(cycle,2750);
   }
