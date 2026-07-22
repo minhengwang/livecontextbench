@@ -136,6 +136,18 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:18px 4
 .ev-cap{border-top:1px solid var(--line);padding:11px 18px;font:13px/1.6 var(--serif);color:var(--gray)}
 .ev-cap a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:760px){.ev-arr{display:none}.ev-node{flex-basis:100%}}
+/* hard examples entry */
+.nav-hard{color:var(--accent)!important;font-weight:600}
+.hgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:6px}
+@media(max-width:760px){.hgrid{grid-template-columns:1fr}}
+.hcard{color:inherit;text-decoration:none;display:flex;justify-content:space-between;align-items:baseline;gap:12px;border:1px solid var(--line);padding:14px 18px;background:var(--surface)}
+.hcard:hover{border-color:var(--accent)}
+.hcard b{font:600 13.5px var(--sans)}
+.hcard .hsc{font:11.5px var(--mono);color:var(--gray2);white-space:nowrap}
+.hcard .hsc i{font-style:normal;font-weight:700;color:var(--accent)}
+.hmore{margin-top:14px}
+.hmore a{font:12.5px var(--mono);color:var(--accent);text-decoration:none;border-bottom:1px solid var(--soft)}
+.hmore a:hover{border-bottom-color:var(--accent)}
 /* prompt box + nav */
 .tk-prompt{margin:26px 0 0;border:1px solid var(--line)}
 .tk-prompt summary{cursor:pointer;padding:11px 16px;font:600 13px var(--sans);color:var(--accent)}
@@ -268,6 +280,7 @@ footer{border-top:1px solid var(--line);margin-top:20px}
         <a href="visualization.html#/visualization/log-triage">log-triage</a>
       </span>
     </span>
+    <a href="visualization.html#/hard" class="nav-hard">hard examples</a>
   </span>
 </nav>
 
@@ -334,6 +347,21 @@ footer{border-top:1px solid var(--line);margin-top:20px}
     <div class="brow dim"><span>base (append-only)</span><div class="bar"><div class="fill" style="width:28.4%"></div></div><span class="v">28.4</span></div>
     <div class="board-cap">All scores are from recorded runs; each method can be replayed turn by turn on the visualization page.</div>
   </div>
+</div>
+
+<div class="sec" id="hard-examples">
+  <h2>Hard examples</h2>
+  <p class="lede">Scaled-up instances of the same four tasks, sized past what lossy or fold-based context
+  management can carry. In the recorded gpt-5.4 runs below, edit_context finishes all four at 1.00;
+  base overruns the budget, the summary agent compacts away data that cannot be regenerated, and
+  folding loses the payload with the branch.</p>
+  <div class="hgrid">
+    <a class="hcard" href="visualization.html#/hard"><b>kv-store · 1,500 keys</b><span class="hsc"><i>1.00</i> vs 0.00 / 0.00 / 0.00</span></a>
+    <a class="hcard" href="visualization.html#/hard"><b>log-triage · 1,450 lines</b><span class="hsc"><i>1.00</i> vs 0.00 / 0.00 / 0.00</span></a>
+    <a class="hcard" href="visualization.html#/hard"><b>needle-retention · 832 needles</b><span class="hsc"><i>1.00</i> vs 0.16 / 0.11 / 0.06</span></a>
+    <a class="hcard" href="visualization.html#/hard"><b>sudoku-sketchpad · 25×25</b><span class="hsc"><i>1.00</i> vs 0.17 / 0.23 / 0.31</span></a>
+  </div>
+  <p class="hmore"><a href="visualization.html#/hard">See the token traces, the failure modes, and the verbatim moments they died →</a></p>
 </div>
 
 </div><!-- /page-home -->
